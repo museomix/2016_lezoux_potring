@@ -18,6 +18,8 @@ import gtk
 from gettext import gettext as _
 import sys
 
+import pango
+
 # Create a single vlc.Instance() to be shared by (possible) multiple players.
 instance = vlc.Instance()
 
