@@ -71,13 +71,14 @@ def maz():
   global tm_av
   j.reset()
   if j.ring_vide() :
-    print("super... mnt remplis ton ring !")
+    #print("super... mnt remplis ton ring !")
     p.vlc._label.set("super... mnt remplis ton ring !")
     ##hey, tu dors ?
     #tm_av = gtk.timeout_add(10000,appel_visiteur)
     return (-1,attente_joueurs)
   else:
     print("vide d'abord le ring stp")
+    p.vlc._label.set("vide le ring pour recommencer stp")
     return (-1,maz)
 
 def attente_joueurs():
@@ -95,7 +96,8 @@ def attente_joueurs():
     except:pass
     j.set_change_off()
     if j.ring_rempli() == True :
-        print " ok  cest bientôt le combat, attention ..."
+        #print " ok  cest bientôt le combat, attention ..."
+        p.vlc._label.set("bientôt le combat, attention ...")
         p.v_init("../data2/timer.mp4")
         p.play()
         return (0,validation)
@@ -113,7 +115,8 @@ def validation():
 			j.set_lecture_off()
 			return (-1,attente_joueurs)
 		elif not j.lecture:
-			print "c'est Go le combat !"
+			#print "c'est Go le combat !"
+			p.vlc._label.set("GO !")
 			j.potiers=list(j.ring)	#le list est super important pour ne pas copier seulement la référence !
 			stats.add_partie(j.potiers)
 			p.vlc._label.set ("pot' " + str(j.ring[0]) + " contre  pot' " + str(j.ring[1]) )
@@ -134,6 +137,7 @@ def go():
 		print v_name
 	p.v_init(v_name)
 	p.play()
+	p.vlc.update_progess()
 	return (0,lire_video)
 
 def lire_video():
@@ -159,7 +163,8 @@ def conflit(): #conflit pendant la lecture d'une vidéo
 	p.s_v_init("../data2/continue.mp4")
 	p.s_play()
 	j.set_lecture_on()
-	print ("remets tout comme avant stp.")
+	#print ("remets tout comme avant stp.")
+	p.vlc._label.set("oh, oh. Remets tes deux poteries en place stp")
 	while True:
 		if not j.lecture:
 			break
@@ -170,6 +175,7 @@ def conflit(): #conflit pendant la lecture d'une vidéo
 	if j.ring == j.potiers:
 		p.s_stop()
 		p.play()
+		p.vlc.update_progess()
 		return(0,lire_video)
 	else:
 		print ("bon on va recommencer, ok.")
@@ -177,18 +183,20 @@ def conflit(): #conflit pendant la lecture d'une vidéo
 		return (0,abandon)
 
 def check_souleve():
-	print("soulève un pot, celui que tu preferes")
-	if not j.ring_rempli() and not j.ring_vide():
-		if j.ring[0]==-1:j.numObjetSouleve=0
-		else:j.numObjetSouleve=1
-		print("repose-le stp")
-		##hey, tu dors ?
-		return (-1,check_repose)
-	elif j.ring==j.potiers:
-		return(-1,check_souleve)
-	else:
-		j.reset_erreurs()
-		return(0,conflit2)
+        #print("soulève un pot, celui que tu preferes")
+        p.vlc._label.set("soulève un pot, celui que tu preferes")
+        if not j.ring_rempli() and not j.ring_vide():
+                if j.ring[0]==-1:j.numObjetSouleve=0
+                else:j.numObjetSouleve=1
+                print("repose-le stp")
+                p.vlc._label.set("ok, reposes le !")
+                ##hey, tu dors ?
+                return (-1,check_repose)
+        elif j.ring==j.potiers:
+                return(-1,check_souleve)
+        else:
+                j.reset_erreurs()
+                return(0,conflit2)
 def check_repose():
 	print j.ring
 	if j.ring==j.potiers:
@@ -199,7 +207,8 @@ def check_repose():
 
 def conflit2(): #conflit pendant le choix d'un objet
          # pause; lancer la voix qui dit hey, remets moi ou sinon on quitte
-	print ("remets tout comme avant stp.")
+	#print ("remets tout comme avant stp.")
+	p.vlc._label.set("oh, oh. Remets tes deux poteries en place stp")
 	p.s_v_init("../data2/continue.mp4")
 	p.s_play()
 	j.set_lecture_on()
@@ -215,12 +224,14 @@ def conflit2(): #conflit pendant le choix d'un objet
 		p.play()
 		return(0,check_souleve)
 	else:
-		print ("bon on va recommencer, ok.")
+		#print ("bon on va recommencer, ok.")
+		p.vlc._label.set("abandon de la partie")
 		p.s_stop()
 		return (0,abandon)
 
 def abandon():
-	print "tu veux quitter cette partie"
+	#print "tu veux quitter cette partie"
+	p.vlc._label.set("abandon de la partie")
 	stats.print_stats()
 	p.v_init("../data2/gameover.mp4")
 	p.play()
