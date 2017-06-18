@@ -68,10 +68,11 @@ class DecoratedVLCWidget(gtk.VBox):
         # self.tetes.add(self._im1)
         # self.pack_start(self.tetes, expand=False)
         self._label = gtk.Label("mini pot contre gros pot")
+        self._label.modify_font(pango.FontDescription("sans 48"))
         self.pack_start(self._label, expand=False)
 
     def update_progess(self):
-        self._label.set_text("P"+str(j.ring[0])+" versus P"+str(j.ring[1]))
+        self._label.set_text("P"+str(j.ring[0])+"          versus           P"+str(j.ring[1]))
         return False
 
 
