@@ -73,12 +73,16 @@ def maz():
   if j.ring_vide() :
     #print("super... mnt remplis ton ring !")
     p.vlc._label.set("super... mnt remplis ton ring !")
+    p.s_v_init("../data3/place_ring.wav")
+    p.s_play()
     ##hey, tu dors ?
     #tm_av = gtk.timeout_add(10000,appel_visiteur)
     return (-1,attente_joueurs)
   else:
     print("vide d'abord le ring stp")
     p.vlc._label.set("vide le ring pour recommencer stp")
+    p.s_v_init("../data3/vide_le_ring.wav")
+    p.s_play()
     return (-1,maz)
 
 def attente_joueurs():
@@ -98,8 +102,10 @@ def attente_joueurs():
     if j.ring_rempli() == True :
         #print " ok  cest bientôt le combat, attention ..."
         p.vlc._label.set("bientôt le combat, attention ...")
-        p.v_init("../data2/timer.mp4")
-        p.play()
+       # p.v_init("../data2/timer.mp4")
+        #p.play()
+        p.s_v_init("../data3/compte_a_rebours.wav")
+        p.s_play()
         return (0,validation)
     else:
         print("oups.. encore?")
@@ -108,20 +114,24 @@ def attente_joueurs():
         return (-1,attente_joueurs)
 
 def validation():
-	j.set_lecture_on()
-	while True:
-		if j.change:
-			p.stop()
-			j.set_lecture_off()
-			return (-1,attente_joueurs)
-		elif not j.lecture:
-			#print "c'est Go le combat !"
-			p.vlc._label.set("GO !")
-			j.potiers=list(j.ring)	#le list est super important pour ne pas copier seulement la référence !
-			stats.add_partie(j.potiers)
-			p.vlc._label.set ("pot' " + str(j.ring[0]) + " contre  pot' " + str(j.ring[1]) )
-			return (0,go)
-		sleep(0.1)
+        j.set_lecture_on()
+        while True:
+                if j.change:
+                        p.stop()
+                        p.s_stop()
+                        p.s_v_init("../data3/place_ring_2.wav")
+                        p.s_play()
+                        j.set_lecture_off()
+                        j.set_change_off() # dddddddddddddddddddddddddddddddddddddddddddddddd
+                        return (-1,attente_joueurs)
+                elif not j.lecture:
+                        #print "c'est Go le combat !"
+                        p.vlc._label.set("GO !")
+                        j.potiers=list(j.ring)  #le list est super important pour ne pas copier seulement la référence !
+                        stats.add_partie(j.potiers)
+                        p.vlc._label.set ("pot' " + str(j.ring[0]) + " contre  pot' " + str(j.ring[1]) )
+                        return (0,go)
+                sleep(0.05)
 
 def go():
 	pot_name="P"+str(j.potiers[0])+"P"+str(j.potiers[1])
@@ -156,11 +166,12 @@ def lire_video():
 				return (0,check_souleve)
 		if not j.jeu_go:
 			return(0,maz)
-		sleep(0.1)
+		sleep(0.05)
 
 def conflit(): #conflit pendant la lecture d'une vidéo
+        j.set_change_off() # !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 	p.pause() # pause; lancer la voix qui dit hey, remets moi ou sinon on quitte
-	p.s_v_init("../data2/continue.mp4")
+	p.s_v_init("../data3/booh2.wav")
 	p.s_play()
 	j.set_lecture_on()
 	#print ("remets tout comme avant stp.")
