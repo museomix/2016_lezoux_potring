@@ -151,6 +151,7 @@ def go():
 	return (0,lire_video)
 
 def lire_video():
+        p.s_stop()
 	j.set_lecture_on()
 	sleep(1)
 	while True:
@@ -201,6 +202,8 @@ def check_souleve():
                 else:j.numObjetSouleve=1
                 print("repose-le stp")
                 p.vlc._label.set("ok, reposes le !")
+                p.s_v_init("../data3/vote_ok.wav")
+                p.s_play()
                 ##hey, tu dors ?
                 return (-1,check_repose)
         elif j.ring==j.potiers:
@@ -246,6 +249,8 @@ def abandon():
 	stats.print_stats()
 	p.v_init("../data2/gameover.mp4")
 	p.play()
+	p.s_v_init("../data3/game_over.wav")
+	p.s_play()
 	j.set_lecture_on()
 	while True:
 		if not j.lecture:
@@ -259,6 +264,8 @@ def fin_partie():
 	#stats.print_stats()
 	p.v_init("../data2/youppie.mp4")
 	p.play()
+	p.s_v_init("../data3/game_over.wav")
+	p.s_play()
 	j.set_lecture_on()
 	while True:
 		if not j.lecture:
