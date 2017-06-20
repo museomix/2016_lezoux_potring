@@ -29,7 +29,7 @@ gobject.threads_init()
 class VideoPlayer:
 	def __init__(self):
 		self.vlc = DecoratedVLCWidget()
-		self.vlc.player.set_rate(2)
+		self.vlc.player.set_rate(1)
 	def v_init(self,fname):
 		self.vlc.player.stop()
 		self.vlc.player.set_media(instance.media_new(fname))
@@ -51,11 +51,12 @@ class VideoPlayer:
 		self.vlc.s_player.play()
 	def main(self):
 		w = gtk.Window()
-		w.resize(1900,1000)
+		w.resize(900,700)
 		#w.fullscreen()
 		w.add(self.vlc)
 		w.show_all()
-		w.connect("destroy", gtk.main_quit)
+                w.modify_bg(gtk.STATE_NORMAL, gtk.gdk.Color('#aaaaaa'))
+                w.connect("destroy", gtk.main_quit)
 		gtk.main()
 
 
@@ -122,7 +123,7 @@ def validation():
                         p.s_v_init("../data3/place_ring_2.wav")
                         p.s_play()
                         j.set_lecture_off()
-                        j.set_change_off() # dddddddddddddddddddddddddddddddddddddddddddddddd
+                        j.set_change_off() # tentative debug
                         return (-1,attente_joueurs)
                 elif not j.lecture:
                         #print "c'est Go le combat !"
@@ -148,6 +149,7 @@ def go():
 	p.v_init(v_name)
 	p.play()
 	p.vlc.update_progess()
+        j.set_change_off()      #  tentative debug
 	return (0,lire_video)
 
 def lire_video():
@@ -170,7 +172,7 @@ def lire_video():
 		sleep(0.05)
 
 def conflit(): #conflit pendant la lecture d'une vidéo
-        j.set_change_off() # !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        j.set_change_off() # tentative debug
 	p.pause() # pause; lancer la voix qui dit hey, remets moi ou sinon on quitte
 	p.s_v_init("../data3/booh2.wav")
 	p.s_play()
@@ -195,11 +197,15 @@ def conflit(): #conflit pendant la lecture d'une vidéo
 		return (0,abandon)
 
 def check_souleve():
+        j.set_lecture_on()   # test debug !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         #print("soulève un pot, celui que tu preferes")
         p.vlc._label.set("soulève un pot, celui que tu preferes")
-        if not j.ring_rempli() and not j.ring_vide():
-                if j.ring[0]==-1:j.numObjetSouleve=0
-                else:j.numObjetSouleve=1
+        p.s_v_init("../data3/souleve_pr_voter.wav")
+        p.s_play()
+
+        if (j.ring[0]==-1 and j.ring[1]==j.potiers[1])or (j.ring[1]==-1 and j.ring[0]==j.potiers[0]):
+                if j.ring[0]==-1 : j.numObjetSouleve=0
+                else : j.numObjetSouleve=1
                 print("repose-le stp")
                 p.vlc._label.set("ok, reposes le !")
                 p.s_v_init("../data3/vote_ok.wav")
@@ -211,6 +217,8 @@ def check_souleve():
         else:
                 j.reset_erreurs()
                 return(0,conflit2)
+
+        
 def check_repose():
 	print j.ring
 	if j.ring==j.potiers:
@@ -221,56 +229,58 @@ def check_repose():
 
 def conflit2(): #conflit pendant le choix d'un objet
          # pause; lancer la voix qui dit hey, remets moi ou sinon on quitte
-	#print ("remets tout comme avant stp.")
-	p.vlc._label.set("oh, oh. Remets tes deux poteries en place stp")
-	p.s_v_init("../data2/continue.mp4")
-	p.s_play()
-	j.set_lecture_on()
-	while True:
-		if not j.lecture:
-			break
-		if j.change:
-			if j.ring == j.potiers:
-				break
-		sleep(0.1)
-	if j.ring == j.potiers:
-		p.s_stop()
-		p.play()
-		return(0,check_souleve)
-	else:
-		#print ("bon on va recommencer, ok.")
-		p.vlc._label.set("abandon de la partie")
-		p.s_stop()
-		return (0,abandon)
+        #print ("remets tout comme avant stp.")
+        p.pause()
+        p.s_v_init("../data3/booh2.wav")
+        p.s_play()
+        j.set_lecture_on()
+        p.vlc._label.set("oh, oh. Remets tes deux poteries en place stp")
+        while True:
+                if not j.lecture:
+                        break
+                if j.change:
+                        j.set_change_off() # tentative debug
+                        if j.ring == j.potiers:
+                                break
+                sleep(0.05)
+        if j.ring == j.potiers:
+                p.s_stop()
+                #p.play()
+                return(0,check_souleve)
+        else:
+                #print ("bon on va recommencer, ok.")
+                p.vlc._label.set("abandon de la partie")
+                p.s_stop()
+                return(0,abandon)
 
 def abandon():
 	#print "tu veux quitter cette partie"
 	p.vlc._label.set("abandon de la partie")
-	stats.print_stats()
-	p.v_init("../data2/gameover.mp4")
-	p.play()
+	#stats.print_stats()
+	#p.v_init("../data2/gameover.mp4")
+	#p.play()
 	p.s_v_init("../data3/game_over.wav")
 	p.s_play()
 	j.set_lecture_on()
 	while True:
 		if not j.lecture:
 			break
-		sleep(0.1)
+		sleep(0.05)
 	return (0,maz)
 
 def fin_partie():
 	# update stats
 	print "tu veux quitter cette partie"
 	#stats.print_stats()
-	p.v_init("../data2/youppie.mp4")
-	p.play()
+	#p.v_init("../data2/youppie.mp4")
+	#p.play()
 	p.s_v_init("../data3/game_over.wav")
 	p.s_play()
 	j.set_lecture_on()
 	while True:
 		if not j.lecture:
 			break
-		sleep(0.1)
+		sleep(0.05)
 	return (0,maz)
 
 
@@ -283,14 +293,14 @@ def lejeu():
 			sleep(sss)
 		else:
 			while not j.change:
-				sleep(0.1)
+				sleep(0.05)
 			j.set_change_off()
 
 
 if __name__ == '__main__':
     
     p=VideoPlayer()
-    p.vlc.player.set_rate(1)
+    p.vlc.player.set_rate(2)
 
     j.jeu_go=True
     j.reset_ring()
