@@ -55,11 +55,11 @@ class Jeu:
 ##############
 	def remplir(self,pos,val):
 		with verrou:
-			self.ring[pos]=val
-			if val == -1: print "je vide"
-			else: print "je remplis"
-			
-			self.change=True
+                        if self.ring[pos]!=val: # securite supplementaire
+                                self.ring[pos]=val
+                                #if val == -1: print "je vide"
+                                #else: print "je remplis"
+				self.change=True
 ##############
 	def ring_rempli(self):
 		if self.ring[0] != -1 and self.ring[1] != -1 : return True
