@@ -37,7 +37,8 @@ class VLCWidget(gtk.DrawingArea):
 				self.player.set_xwindow(self.window.xid)
 			return True
 		self.connect("map", handle_embed)
-		self.set_size_request(1000, 1000)
+		self.modify_bg(gtk.STATE_NORMAL, gtk.gdk.Color('#000000'))
+		self.set_size_request(800, 800) # 1000,1000
 	def set_size(self,w,h):
 		self.set_size_request(w, h)
 
