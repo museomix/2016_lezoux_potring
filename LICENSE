@@ -5,22 +5,19 @@ Potring 2.0 <potringpotring@gmail.com>
 Copyright (c) 2016-2017 Samuel Braikeh <samuel.braikeh@gmail.com> - GNU GENERAL PUBLIC LICENSE
  Version 2
 
+Mai 2017 : version pour la borne adaptée par Samy (https://github.com/samy) et Jean-Noël (https://github.com/OotSideBox) ( tests avec lecteurs de tag rfid, interface visuelle de la version clavier épurée)
 
-Librairies utilis�es
+
+Librairies utilisées
 ====================
 
 python-vlc :
-GNU LESSER GENERAL PUBLIC LICENSE
+ GNU LESSER GENERAL PUBLIC LICENSE
  Version 2.1, February 1999
 
- Copyright (C) 1991, 1999 Free Software Foundation, Inc.
- 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
-
-
 arduinoserial :
-Copyright (c) 2009 John Wiseman - MIT License
-
+ Copyright (c) 2009 John Wiseman - MIT License
 
 pyserial :
-Copyright (c) 2001-2016 Chris Liechti <cliechti@gmx.net>
- - BSD 3-clause "New" or "Revised" License
+ Copyright (c) 2001-2016 Chris Liechti <cliechti@gmx.net>
+ BSD 3-clause "New" or "Revised" License
